@@ -1,0 +1,9 @@
+{
+  "label": "p8-ctx4096-warm-8req",
+  "ollama_num_parallel": 8,
+  "ollama_context_length": 4096,
+  "cache_state": "warm",
+  "num_requests": 8,
+  "ollama_version": "0.33.2",
+  "started_at": "2026-10-13T00:08:37.135337+09:00"
+}

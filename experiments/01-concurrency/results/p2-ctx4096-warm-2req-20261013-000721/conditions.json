@@ -1,0 +1,9 @@
+{
+  "label": "p2-ctx4096-warm-2req",
+  "ollama_num_parallel": 2,
+  "ollama_context_length": 4096,
+  "cache_state": "warm",
+  "num_requests": 2,
+  "ollama_version": "0.33.2",
+  "started_at": "2026-10-13T00:07:21.166804+09:00"
+}

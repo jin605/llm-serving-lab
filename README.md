@@ -25,9 +25,10 @@ SGLang, Quantization, GPU Profiling, Kubernetes는 필요한 실험이 생길 �
 - 학습 및 실험 기록 구조 마련.
 - 로컬 Ollama에서 `llama3.1:8b` 실행과 GPU 로딩 확인.
 - CLI로 출력 길이에 따른 생성 시간 변화 관찰: [Baseline 기록](experiments/00-baseline/README.md).
-- 다음 작업: `benchmark/single_request.py`로 Ollama API 요청과 JSON 저장 구현.
-- API 측정 코드는 아직 구현하지 않았다.
-
+- curl로 동시 요청을 보내 `OLLAMA_NUM_PARALLEL` 1/2/4/8에 따른 지연과 처리량을 비교했다: [Concurrency 결과](experiments/01-concurrency/README.md).
+- 결과: parallel=1은 요청을 순차 처리하고, 병렬 처리 시 처리량은 51 → 120 tok/s로 늘었으나 4 이후 포화했다.
+- 결과는 실행별 디렉터리에 `conditions.json`과 요청당 JSON 하나로 저장하며, client_total_s를 함께 기록한다.
+- 다음 작업: 조건별 반복 측정으로 4~8 사이 포화를 확인한다.
 ## 디렉터리 역할
 
 | 경로 | 역할 |
@@ -44,7 +45,7 @@ SGLang, Quantization, GPU Profiling, Kubernetes는 필요한 실험이 생길 �
 - 계획과 진행 상황은 이 README에서 관리한다.
 - 공부한 개념, 막힌 점, 다음 행동은 [학습 일지](docs/learning-log.md)에 한 학습 세션당 짧게 기록한다. 매 실행마다 글을 쓰지 않는다.
 - 실험의 조건, 비교 결과, 해석은 해당 실험의 README에 묶어 기록한다.
-- 이후 측정 도구가 원시 결과를 `experiments/<실험>/results/run-001/`처럼 실행별로 저장하도록 구현한다.
+- 결과는 실행별 디렉터리에 `conditions.json`과 요청당 JSON 하나로 저장하며 client_total_s를 포함한다. 별도 시간·오류 TXT 파일은 만들지 않는다.
 - 실행별 설정과 환경도 결과와 함께 보관하고 덮어쓰지 않는다.
 - 개념과 소스 분석도 우선 학습 일지에 적고, 찾기 어려울 만큼 쌓일 때만 별도 문서로 분리한다.
 - 모델 가중치는 저장소 외부 캐시에 보관하고 모델 ID와 revision을 기록한다.
