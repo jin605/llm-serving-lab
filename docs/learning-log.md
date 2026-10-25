@@ -42,3 +42,14 @@
 - 막힌 점: Ollama는 슬롯 수 × context 길이만큼 KV cache를 잡는다. parallel=8에 기본 context 32768이면 메모리가 부족할 수 있어 4096으로 줄였다.
 - 다음 행동: 조건별 반복 측정으로 4~8 사이 포화를 확인한다.
 - 관련 실험: [Concurrency](../experiments/01-concurrency/README.md)
+
+## 2026-10-25 — 메모리 대역폭 검증과 TTFT 측정 시작
+
+- 계산: 307 GB/s ÷ 4.92 GB ≈ 62 tok/s가 이론상 최대이고 실제는 56 tok/s다. 직렬 decode는 메모리 대역폭의 85~90%를 쓴다.
+- 이해: 병목은 GPU 연산이 아니라 가중치를 읽는 속도다. 빨라지려면 읽는 양을 줄이거나(양자화) 한 번 읽은 가중치를 나눠 써야 한다(batching).
+- 이해: 병렬 처리는 공짜가 아니다. 지연 목표(TTFT, TPOT)를 지키는 범위에서 처리량을 최대로 하는 지점을 찾아야 한다.
+- 구현: `benchmark/ttft.py`로 stream 응답의 첫 토큰 도착 시각을 재서 TTFT와 TPOT을 계산했다. warm 상태에서 TTFT 약 37 ms, TPOT 약 18.4 ms.
+- 관찰: 같은 prompt의 첫 요청만 TTFT가 약 115 ms였다. prompt를 바꾸는 실험으로 GPU 예열이 아니라 prompt cache 때문임을 확인했다.
+- 이해: curl의 `time_starttransfer`는 Ollama에서는 첫 토큰과 비슷하지만, 헤더를 먼저 보내는 서버에서는 TTFT가 아니다. 그래서 Python으로 첫 토큰을 직접 확인한다.
+- 다음 행동: `ttft.py`가 prompt를 인자로 받고 결과를 JSON으로 저장하게 만든다.
+- 관련 실험: [Prefix Cache](../experiments/02-prefix-cache/README.md)

@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-10-25T17:05:33.398148+09:00",
+  "prompt": "사과가 뭐야?",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 64
+  },
+  "cache_state": "warm",
+  "ttft_s": 0.113071458064951,
+  "tpot_s": 0.018295703697875733,
+  "total_s": 1.2657007910311222,
+  "server_stats": {
+    "model": "llama3.1:8b",
+    "created_at": "2026-10-25T08:05:34.663198Z",
+    "done": true,
+    "done_reason": "length",
+    "total_duration": 1256654666,
+    "load_duration": 545541,
+    "prompt_eval_count": 16,
+    "prompt_eval_duration": 103108000,
+    "eval_count": 64,
+    "eval_duration": 1152103000
+  }
+}

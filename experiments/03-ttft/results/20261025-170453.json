@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-10-25T17:04:53.793699+09:00",
+  "prompt": "서울에 대해 자세히 설명해줘",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 64
+  },
+  "cache_state": "warm",
+  "ttft_s": 0.12050508300308138,
+  "tpot_s": 0.01825223214340411,
+  "total_s": 1.2703957080375403,
+  "server_stats": {
+    "model": "llama3.1:8b",
+    "created_at": "2026-10-25T08:04:55.063578Z",
+    "done": true,
+    "done_reason": "length",
+    "total_duration": 1255737750,
+    "load_duration": 1163083,
+    "prompt_eval_count": 19,
+    "prompt_eval_duration": 103371000,
+    "eval_count": 64,
+    "eval_duration": 1149508000
+  }
+}

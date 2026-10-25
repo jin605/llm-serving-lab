@@ -28,7 +28,9 @@ SGLang, Quantization, GPU Profiling, Kubernetes는 필요한 실험이 생길 �
 - curl로 동시 요청을 보내 `OLLAMA_NUM_PARALLEL` 1/2/4/8에 따른 지연과 처리량을 비교했다: [Concurrency 결과](experiments/01-concurrency/README.md).
 - 결과: parallel=1은 요청을 순차 처리하고, 병렬 처리 시 처리량은 51 → 120 tok/s로 늘었으나 4 이후 포화했다.
 - 결과는 실행별 디렉터리에 `conditions.json`과 요청당 JSON 하나로 저장하며, client_total_s를 함께 기록한다.
-- 다음 작업: 조건별 반복 측정으로 4~8 사이 포화를 확인한다.
+- 직렬 decode가 메모리 대역폭의 85~90%를 쓰는 것을 계산으로 확인했다.
+- `benchmark/ttft.py`로 단일 요청의 TTFT와 TPOT을 측정했다. 같은 prompt 반복 시 prompt cache로 TTFT가 줄어드는 것을 관찰했다: [Prefix Cache 사전 관찰](experiments/02-prefix-cache/README.md).
+- 다음 작업: `ttft.py`가 prompt를 인자로 받고 결과를 JSON으로 저장하게 만든다. 이후 동시 요청 수에 따른 TTFT를 측정한다.
 ## 디렉터리 역할
 
 | 경로 | 역할 |

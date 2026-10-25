@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-10-25T17:05:03.648423+09:00",
+  "prompt": "부산에 대해 자세히 설명해줘",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 64
+  },
+  "cache_state": "warm",
+  "ttft_s": 0.11701775004621595,
+  "tpot_s": 0.01835764153853118,
+  "total_s": 1.2735491669736803,
+  "server_stats": {
+    "model": "llama3.1:8b",
+    "created_at": "2026-10-25T08:05:04.921483Z",
+    "done": true,
+    "done_reason": "length",
+    "total_duration": 1262529208,
+    "load_duration": 815333,
+    "prompt_eval_count": 20,
+    "prompt_eval_duration": 104338000,
+    "eval_count": 64,
+    "eval_duration": 1156162000
+  }
+}
