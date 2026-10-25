@@ -1,19 +1,21 @@
+import argparse
 import json
-import sys
 import time
 import urllib.request
 from datetime import datetime
 from pathlib import Path
 
-if len(sys.argv) < 2:
-    sys.exit('사용법: python3 benchmark/ttft.py "질문"')
+parser = argparse.ArgumentParser(description="Ollama 요청 하나의 TTFT와 TPOT을 측정한다.")
+parser.add_argument("prompt", help="보낼 질문")
+parser.add_argument("--model", default="llama3.1:8b")
+parser.add_argument("--num-predict", type=int, default=64, help="최대 출력 토큰 수")
+args = parser.parse_args()
 
-prompt = sys.argv[1]
 payload = {
-    "model": "llama3.1:8b",
-    "prompt": prompt,
+    "model": args.model,
+    "prompt": args.prompt,
     "stream": True,
-    "options": {"temperature": 0, "seed": 42, "num_predict": 64},
+    "options": {"temperature": 0, "seed": 42, "num_predict": args.num_predict},
 }
 req = urllib.request.Request(
     "http://localhost:11434/api/generate",
@@ -24,12 +26,14 @@ req = urllib.request.Request(
 started_at = datetime.now().astimezone()
 start = time.perf_counter()              # 1. 요청 보내기 직전 시각
 first_token_at = None
+chunks = []                              # 받은 토큰 조각을 모아 답변 텍스트를 만든다
 
 with urllib.request.urlopen(req) as resp:
     for line in resp:                    # 2. 한 줄(토큰 하나)씩 읽기
         event = json.loads(line)
         if event["response"] and first_token_at is None:
             first_token_at = time.perf_counter()   # 3. 첫 토큰 도착 시각
+        chunks.append(event["response"])
         if event["done"]:
             end = time.perf_counter()              # 4. 마지막 줄 도착 시각
             final = event
@@ -44,12 +48,14 @@ cache_state = "cold" if load_s > 0.1 else "warm"
 
 result = {
     "started_at": started_at.isoformat(),
-    "prompt": prompt,
+    "model": args.model,
+    "prompt": args.prompt,
     "options": payload["options"],
     "cache_state": cache_state,
     "ttft_s": ttft,
     "tpot_s": tpot,
     "total_s": total,
+    "response": "".join(chunks),
     "server_stats": {k: v for k, v in final.items() if k not in ("response", "context")},
 }
 
@@ -60,5 +66,5 @@ out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
 
 print(f"TTFT  = {ttft * 1000:.1f} ms ({cache_state}, load {load_s * 1000:.0f} ms)")
 print(f"TPOT  = {tpot * 1000:.1f} ms")
-print(f"total = {total:.3f} s")
+print(f"total = {total:.3f} s ({final['eval_count']} tokens, {final['done_reason']})")
 print(f"saved to {out_path}")
