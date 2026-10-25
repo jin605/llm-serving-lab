@@ -34,7 +34,7 @@ curl의 `time_starttransfer`는 Ollama에서는 첫 토큰과 비슷하지만(�
 
 결과: `results/20261025-1704*.json`, `results/20261025-170533.json`
 
-같은 질문을 반복하면 TTFT가 약 37 ms로 줄었다. 원인은 [Prefix Cache 사전 관찰](../02-prefix-cache/README.md)에 기록했다.
+같은 질문을 반복하면 TTFT가 약 37 ms로 줄었다. 원인은 [Prefix Cache 사전 관찰](../02-prefix-cache/report.md)에 기록했다.
 
 ## 실험 2: 입력 길이에 따른 TTFT (2026-10-25)
 

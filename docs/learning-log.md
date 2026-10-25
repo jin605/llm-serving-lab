@@ -1,6 +1,6 @@
 # 학습 일지
 
-한 학습 세션이 끝날 때 이해한 점, 막힌 점, 다음 행동을 짧게 기록한다. 매 명령이나 실행마다 기록할 필요는 없다. 상세 실험 수치는 해당 실험 README에 둔다.
+한 학습 세션이 끝날 때 이해한 점, 막힌 점, 다음 행동을 짧게 기록한다. 매 명령이나 실행마다 기록할 필요는 없다. 상세 실험 수치는 해당 실험 폴더의 `report.md`에 둔다.
 
 ## 2026-10-06 — 로컬 실행과 출력 길이 관찰
 
@@ -10,7 +10,7 @@
 - 관찰: 짧은 출력과 긴 출력의 입력 토큰 수는 같았고, 긴 출력에서 생성 시간이 늘었다.
 - 한계: CLI 단일 실행 결과이며 TTFT와 반복 측정은 아직 없다.
 - 다음 행동: Python으로 Ollama API를 호출하고 응답과 통계를 JSON으로 저장한다.
-- 관련 실험: [Baseline](../experiments/00-baseline/README.md)
+- 관련 실험: [Baseline](../experiments/00-baseline/report.md)
 
 ## 다음 기록 양식
 
@@ -30,7 +30,7 @@
 - 이해: JSON은 Ollama 응답과 서버 통계이고, client_total은 curl에서 측정한 요청 완료까지의 시간이다.
 - 기록: 요청당 JSON 하나로 합쳤다. 에이전트가 별도 실행한 1·2·4·8개 결과는 삭제했다.
 - 다음 행동: 두 요청의 서버 통계를 비교하며 원인을 살펴본다.
-- 관련 실험: [Concurrency](../experiments/01-concurrency/README.md)
+- 관련 실험: [Concurrency](../experiments/01-concurrency/report.md)
 
 ## 2026-10-13 — 동시 처리 수에 따른 지연과 처리량
 
@@ -41,7 +41,7 @@
 - 막힌 점: 결과 디렉터리를 고정 이름으로 써서 이전 결과가 덮어써졌다. 실행별 디렉터리와 `conditions.json`으로 바꿨다.
 - 막힌 점: Ollama는 슬롯 수 × context 길이만큼 KV cache를 잡는다. parallel=8에 기본 context 32768이면 메모리가 부족할 수 있어 4096으로 줄였다.
 - 다음 행동: 조건별 반복 측정으로 4~8 사이 포화를 확인한다.
-- 관련 실험: [Concurrency](../experiments/01-concurrency/README.md)
+- 관련 실험: [Concurrency](../experiments/01-concurrency/report.md)
 
 ## 2026-10-25 — 메모리 대역폭 검증과 TTFT 측정 시작
 
@@ -58,4 +58,4 @@
 - 막힌 점: zsh의 `prompt` 특수 변수와 서브셸 `$RANDOM` 고정값 때문에 첫 시도에서 cache가 끼어들었다. 결과를 지우고 다시 측정했다.
 - 이해: 토큰은 음절이나 단어가 아니다. 비용과 지연은 토큰 수로 결정되고, 한국어는 영어보다 토큰이 많이 나오는 경우가 많다.
 - 다음 행동: 동시 요청 수에 따른 TTFT를 측정한다.
-- 관련 실험: [Prefix Cache](../experiments/02-prefix-cache/README.md), [TTFT](../experiments/03-ttft/README.md)
+- 관련 실험: [Prefix Cache](../experiments/02-prefix-cache/report.md), [TTFT](../experiments/03-ttft/report.md)
