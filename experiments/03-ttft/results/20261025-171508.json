@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-10-25T17:15:08.313140+09:00",
+  "prompt": "[run 1-1792916108277417000] The quick brown fox jumps over the lazy dog. Summarize the text above.",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 64
+  },
+  "cache_state": "warm",
+  "ttft_s": 0.10217183292843401,
+  "tpot_s": 0.01816877565355613,
+  "total_s": 1.046948166913353,
+  "server_stats": {
+    "model": "llama3.1:8b",
+    "created_at": "2026-10-25T08:15:09.359641Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 1038218208,
+    "load_duration": 541417,
+    "prompt_eval_count": 40,
+    "prompt_eval_duration": 91564000,
+    "eval_count": 53,
+    "eval_duration": 944420000
+  }
+}

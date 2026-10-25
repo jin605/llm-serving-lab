@@ -55,7 +55,7 @@ result = {
 
 out_dir = Path("experiments/03-ttft/results")
 out_dir.mkdir(parents=True, exist_ok=True)
-out_path = out_dir / f"{started_at:%Y%m%d-%H%M%S}.json"
+out_path = out_dir / f"{started_at:%Y%m%d-%H%M%S-%f}.json"
 out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
 
 print(f"TTFT  = {ttft * 1000:.1f} ms ({cache_state}, load {load_s * 1000:.0f} ms)")

@@ -51,5 +51,11 @@
 - 구현: `benchmark/ttft.py`로 stream 응답의 첫 토큰 도착 시각을 재서 TTFT와 TPOT을 계산했다. warm 상태에서 TTFT 약 37 ms, TPOT 약 18.4 ms.
 - 관찰: 같은 prompt의 첫 요청만 TTFT가 약 115 ms였다. prompt를 바꾸는 실험으로 GPU 예열이 아니라 prompt cache 때문임을 확인했다.
 - 이해: curl의 `time_starttransfer`는 Ollama에서는 첫 토큰과 비슷하지만, 헤더를 먼저 보내는 서버에서는 TTFT가 아니다. 그래서 Python으로 첫 토큰을 직접 확인한다.
-- 다음 행동: `ttft.py`가 prompt를 인자로 받고 결과를 JSON으로 저장하게 만든다.
-- 관련 실험: [Prefix Cache](../experiments/02-prefix-cache/README.md)
+- 구현: `ttft.py`가 prompt를 인자로 받고, cold/warm을 `load_duration`으로 판별해 결과를 JSON으로 저장하게 했다.
+- 관찰: 입력 길이를 40~2030 tokens로 바꾸자 약 130 tokens까지 TTFT는 약 110 ms로 일정했고, 이후 토큰당 약 0.97 ms씩 늘었다.
+- 이해: prefill은 입력을 한 번에 묶어 계산해 약 1030 tok/s로 decode(약 54 tok/s)보다 20배 빠르다. prefill은 연산, decode는 메모리가 병목이다(가설).
+- 이해: 입력이 길면 토큰마다 KV cache도 더 읽어야 해서 TPOT이 18.2 → 19.4 ms로 늘었다. 메모리 대역폭 모델로 19.2 ms를 예측했고 맞았다.
+- 막힌 점: zsh의 `prompt` 특수 변수와 서브셸 `$RANDOM` 고정값 때문에 첫 시도에서 cache가 끼어들었다. 결과를 지우고 다시 측정했다.
+- 이해: 토큰은 음절이나 단어가 아니다. 비용과 지연은 토큰 수로 결정되고, 한국어는 영어보다 토큰이 많이 나오는 경우가 많다.
+- 다음 행동: 동시 요청 수에 따른 TTFT를 측정한다.
+- 관련 실험: [Prefix Cache](../experiments/02-prefix-cache/README.md), [TTFT](../experiments/03-ttft/README.md)

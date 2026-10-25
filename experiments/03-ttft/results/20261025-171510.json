@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-10-25T17:15:10.264251+09:00",
+  "prompt": "[run 10-1792916110232957000] The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. Summarize the text above.",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 64
+  },
+  "cache_state": "warm",
+  "ttft_s": 0.12290012498851866,
+  "tpot_s": 0.018269164284824262,
+  "total_s": 0.7623208749573678,
+  "server_stats": {
+    "model": "llama3.1:8b",
+    "created_at": "2026-10-25T08:15:11.026045Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 753603959,
+    "load_duration": 539292,
+    "prompt_eval_count": 130,
+    "prompt_eval_duration": 111534000,
+    "eval_count": 36,
+    "eval_duration": 638995000
+  }
+}

@@ -30,7 +30,9 @@ SGLang, Quantization, GPU Profiling, Kubernetes는 필요한 실험이 생길 �
 - 결과는 실행별 디렉터리에 `conditions.json`과 요청당 JSON 하나로 저장하며, client_total_s를 함께 기록한다.
 - 직렬 decode가 메모리 대역폭의 85~90%를 쓰는 것을 계산으로 확인했다.
 - `benchmark/ttft.py`로 단일 요청의 TTFT와 TPOT을 측정했다. 같은 prompt 반복 시 prompt cache로 TTFT가 줄어드는 것을 관찰했다: [Prefix Cache 사전 관찰](experiments/02-prefix-cache/README.md).
-- 다음 작업: `ttft.py`가 prompt를 인자로 받고 결과를 JSON으로 저장하게 만든다. 이후 동시 요청 수에 따른 TTFT를 측정한다.
+- `ttft.py`가 prompt를 인자로 받고 결과를 JSON으로 저장한다. 입력 길이 40~2030 tokens에서 TTFT를 측정했다: [TTFT 결과](experiments/03-ttft/README.md).
+- 결과: 약 130 tokens까지 TTFT는 약 110 ms로 일정하고, 이후 길이에 비례한다(입력 처리 약 1030 tok/s). 입력이 길면 KV cache를 더 읽어 TPOT이 약 7% 늘었다.
+- 다음 작업: 동시 요청 수에 따른 TTFT를 측정한다. 요청마다 다른 prompt를 보내 cache 효과를 뺀다.
 ## 디렉터리 역할
 
 | 경로 | 역할 |
@@ -60,3 +62,4 @@ SGLang, Quantization, GPU Profiling, Kubernetes는 필요한 실험이 생길 �
 - [환경 기록](docs/environment.md)
 - [Concurrency](experiments/01-concurrency/README.md)
 - [Prefix Cache](experiments/02-prefix-cache/README.md)
+- [TTFT](experiments/03-ttft/README.md)
