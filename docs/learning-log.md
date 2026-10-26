@@ -61,5 +61,8 @@
 - 관찰: 출력 16~1024 tokens에서 전체 시간이 `TTFT + 출력 토큰 수 × TPOT` 예측과 맞았다. 모델이 일찍 멈추지 않게 숫자 세기 작업을 시켰다.
 - 관찰: 1024 tokens를 연속 실행하자 TPOT이 회차마다 늘었다. `powermetrics`로 보니 GPU 클럭이 1620 → 약 1360 MHz로 내려갔고, 발열 단계는 Nominal이었다.
 - 이해: 클럭이 15% 내려가도 TPOT은 5~7%만 늘었다. decode는 주로 메모리에 묶여 있기 때문이다. 긴 벤치마크는 클럭 하락까지 고려해야 한다.
-- 다음 행동: 동시 요청 수에 따른 TTFT를 측정한다.
+- 관찰: 동시 사용자 8명에서 parallel을 1 → 8로 올리자 평균 TTFT는 4.48 → 0.32초로 줄고 TPOT은 18 → 62 ms로 늘었다.
+- 이해: parallel은 TTFT와 TPOT 중 무엇을 희생할지 고르는 설정이다. TTFT 1초·TPOT 50 ms 목표로는 이 맥북에서 동시 약 4명이 한계다. 목표를 어떻게 잡느냐가 결론을 바꾼다.
+- 관찰: 생성 중인 요청에 다른 요청의 입력 처리가 끼어들면 그 요청의 TPOT이 늘었다. chunked prefill이 해결하려는 문제다.
+- 다음 행동: Mac에서 Prefix Cache 실험을 하고, GPU 서버에서 vLLM으로 같은 측정을 반복한다.
 - 관련 실험: [Prefix Cache](../experiments/02-prefix-cache/report.md), [TTFT](../experiments/03-ttft/report.md)

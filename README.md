@@ -14,7 +14,7 @@ Ollama와 vLLM에 요청을 보내고, 입력 길이·출력 길이·동시 요�
 - [x] 2. 결과 저장: 응답과 실행 통계를 JSON 파일로 저장한다.
 - [x] 3. 스트리밍 측정: 요청 시작부터 첫 출력 도착까지 TTFT를 측정한다.
 - [x] 4. 길이별 반복 실험: 입력·출력 길이 조건과 실제 토큰 수를 기록하고 비교한다.
-- [ ] 5. 동시 요청과 분석: 동시 요청 수에 따른 지연과 처리량을 비교한다.
+- [x] 5. 동시 요청과 분석: 동시 요청 수에 따른 지연과 처리량을 비교한다.
 - [ ] 6. vLLM 연결: NVIDIA GPU 서버에서 같은 측정 도구로 실험한다.
 - [ ] 7. Prefix Cache: 공통 Prefix 재사용 조건과 성능 변화를 검증한다.
 
@@ -34,7 +34,8 @@ SGLang, Quantization, GPU Profiling, Kubernetes는 필요한 실험이 생길 �
 - 결과: 약 130 tokens까지 TTFT는 약 110 ms로 일정하고, 이후 길이에 비례한다(입력 처리 약 1030 tok/s). 입력이 길면 KV cache를 더 읽어 TPOT이 약 7% 늘었다.
 - `ttft.py`가 모델 이름과 답변 텍스트도 저장한다. 출력 16~1024 tokens에서 `전체 시간 ≈ TTFT + 출력 토큰 수 × TPOT`이 맞는 것을 확인했다.
 - 긴 연속 실행에서 GPU 클럭이 1620 → 약 1360 MHz로 내려가며 TPOT이 약 5~7% 늘어나는 것을 `powermetrics`로 관찰했다.
-- 다음 작업: 동시 요청 수에 따른 TTFT를 측정한다. 요청마다 다른 prompt를 보내 cache 효과를 뺀다.
+- 동시 사용자 8명에서 parallel 1/2/4/8별 TTFT·TPOT을 측정했다. TTFT 1초·TPOT 50 ms 목표를 지키며 처리할 수 있는 사용자는 약 4명이었다: [Concurrency 실험 3](experiments/01-concurrency/report.md).
+- 다음 작업: Mac에서 Prefix Cache 실험(7단계)을 먼저 하고, 이후 GPU 서버에서 vLLM으로 같은 측정을 반복한다(6단계).
 ## 디렉터리 역할
 
 | 경로 | 역할 |

@@ -82,16 +82,87 @@ OLLAMA_CONTEXT_LENGTH=4096 OLLAMA_NUM_PARALLEL=4 /Applications/Ollama.app/Conten
 - 예측: 같은 모델을 Q8(약 8.5 GB)로 돌리면 307 × 0.9 ÷ 8.5 ≈ 32 tok/s 근처가 나와야 한다. 아직 측정하지 않았다.
 - 이 장비와 모델 조합에서는 parallel 4 근처가 지연과 처리량의 균형점으로 보인다.
 
+## 실험 3: 동시 사용자 8명의 TTFT·TPOT (2026-10-25)
+
+실험 2는 요청이 모두 끝나는 시간만 쟀다. 이번에는 사용자 한 명 한 명이 체감하는 TTFT와 TPOT을 잰다.
+
+### 조건
+
+- 도구: [`benchmark/ttft.py`](../../benchmark/ttft.py)를 8개 프로세스로 동시에 실행했다. 각 프로세스가 자기 요청의 TTFT와 TPOT을 잰다.
+- 동시 요청 8개로 고정하고 `OLLAMA_NUM_PARALLEL`을 1, 2, 4, 8로 바꿨다. 조건당 1회.
+- 입력: `[req <번호>-<시각>] Count from 1 to 2000, separated by commas. Do not stop early.` 맨 앞 번호가 요청마다 달라 prompt cache를 피한다.
+- 출력: 64 tokens. 모든 요청이 `done_reason: length`였다.
+- 서버를 재시작할 때마다 토큰 2개짜리 워밍업 요청으로 모델을 올렸다.
+
+실행 명령(P는 서버의 `OLLAMA_NUM_PARALLEL`과 같게):
+
+```bash
+P=4
+N=8
+stamp=$(date +%Y%m%d-%H%M%S)
+out="experiments/01-concurrency/results/ttft-p${P}-ctx4096-${N}req-${stamp}"
+for i in $(seq 1 $N); do
+  python3 benchmark/ttft.py "[req ${i}-${stamp}] Count from 1 to 2000, separated by commas. Do not stop early." --out-dir "$out" &
+done
+wait
+```
+
+### 결과
+
+결과: `results/ttft-p{1,2,4,8}-ctx4096-8req-20261025-*/`
+
+요청별 값(TTFT 오름차순):
+
+| parallel | TTFT (s) | TPOT (ms) |
+| ---: | --- | --- |
+| 1 | 0.13 / 1.38 / 2.62 / 3.87 / 5.11 / 6.35 / 7.58 / 8.82 | 18.1~18.4 |
+| 2 | 0.12 / 0.23 / 1.89 / 1.89 / 3.57 / 3.57 / 5.23 / 5.24 | 26.3 / 24.8 / 나머지 24.9 |
+| 4 | 0.12 / 0.33 / 0.33 / 0.33 / 2.65 / 2.65 / 2.65 / 2.65 | 37.8 / 34.9 ×3 / 35.0 ×4 |
+| 8 | 0.17 ×3 / 0.41~0.42 ×5 | 65.3 ×3 / 62.1 ×5 |
+
+요약:
+
+| parallel | 평균 TTFT | 마지막 TTFT | TPOT | 8명 완료 시간 | 처리량 |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | 4.48 s | 8.82 s | 18 ms | 9.97 s | 51 tok/s |
+| 2 | 2.72 s | 5.24 s | 25 ms | 6.80 s | 75 tok/s |
+| 4 | 1.46 s | 2.65 s | 35 ms | 4.85 s | 105 tok/s |
+| 8 | 0.32 s | 0.42 s | 62~65 ms | 4.33 s | 118 tok/s |
+
+목표를 TTFT 1초 이내, TPOT 50 ms 이내로 잡았을 때 충족한 사용자 수:
+
+| parallel | TTFT 충족 | TPOT 충족 | 둘 다 충족 |
+| ---: | ---: | ---: | ---: |
+| 1 | 1 | 8 | 1 |
+| 2 | 2 | 8 | 2 |
+| 4 | 4 | 8 | 4 |
+| 8 | 8 | 0 | 0 |
+
+### 관찰
+
+- parallel이 낮으면 TTFT가 계단처럼 쌓였다. 계단 한 단은 한 묶음이 끝나는 시간이다(parallel=1에서 1.24 s, 2에서 1.67 s, 4에서 2.3 s).
+- parallel이 높을수록 계단 수가 줄어 TTFT가 짧아졌지만 TPOT이 늘었다. TPOT은 실험 2의 토큰당 생성 시간과 같은 수준이다.
+- 한 묶음 안에서도 입력 처리가 한꺼번에 일어나지 않았다. parallel=4에서는 1명이 먼저 0.12 s에 시작하고 3명이 0.33 s에 시작했다. 먼저 시작한 요청의 TPOT은 37.8 ms로 나머지(34.9 ms)보다 컸다. parallel=8과 2에서도 같은 패턴이 보였다.
+
+### 해석
+
+- 어떤 parallel 설정으로도 8명 모두 목표를 지키지 못했다. parallel은 TTFT와 TPOT 중 어느 쪽을 희생할지 고르는 설정이다.
+- 이 장비와 모델로 목표(TTFT 1 s, TPOT 50 ms)를 지키며 동시에 처리할 수 있는 사용자는 약 4명이다.
+- 먼저 시작한 요청의 TPOT이 큰 것은, 생성 도중 뒤 요청들의 입력 처리(약 0.2 s)가 끼어들어 생성이 멈췄기 때문으로 추정한다. 63개 간격에 0.2 s가 더해지면 토큰당 약 3 ms가 늘어 관찰값과 맞는다. 긴 입력이 들어오면 다른 사용자의 생성이 그만큼 멈춘다는 뜻이며, chunked prefill이 해결하려는 문제다.
+- 목표 설정이 결론을 바꾼다. TPOT 목표를 70 ms(초당 약 14 tokens)로 완화하면 parallel=8에서 8명 모두 충족한다.
+- 8명을 더 엄격한 목표 안에서 처리하려면 메모리 대역폭이 더 높은 GPU나 더 효율적인 서빙 엔진이 필요하다. 같은 실험을 GPU 서버의 vLLM에서 반복해 비교한다.
+
 ## 한계
 
 - 조건당 1회만 측정했다. 특히 4와 8 사이의 포화는 반복 측정으로 확인해야 한다.
+- 실험 3은 8개 요청이 동시에 도착하는 경우만 측정했다. 실제 서비스처럼 요청이 시간차를 두고 계속 도착하는 경우는 측정하지 않았다.
 - 이전에 context 32768(앱 기본값)로 측정한 결과는 정리하면서 삭제했다. 그중 parallel=4 warm 실행에서 처리량 약 96 tok/s, `prompt_eval_duration` 0.47초를 관찰했다. context 4096에서는 각각 107 tok/s, 0.12초였다. 차이의 원인은 확인하지 않았다.
-- TTFT는 측정하지 않았다(stream: false).
+- 실험 1·2는 TTFT를 측정하지 않았다(stream: false). TTFT는 실험 3에서 측정했다.
 - 메모리 대역폭 사용률은 공식 대역폭과 생성 속도로 계산한 값이며, 실제 메모리 트래픽을 측정하지 않았다. 연산 한계에 대한 해석은 추정이다.
 
 ## 기록 방식
 
-- 실행마다 `results/p{parallel}-ctx{context}-{warm|cold}-{N}req-{시각}/` 디렉터리를 만들어 덮어쓰지 않는다.
+- 실행마다 `results/p{parallel}-ctx{context}-{warm|cold}-{N}req-{시각}/` 디렉터리를 만들어 덮어쓰지 않는다. 실험 3은 `results/ttft-p{parallel}-ctx{context}-{N}req-{시각}/`에 `ttft.py`의 결과 형식으로 저장한다.
 - 각 디렉터리에 `conditions.json`(parallel, context 길이, warm/cold, 요청 수, Ollama 버전, 시작 시각)과 요청당 JSON 하나를 저장한다.
 - 요청 JSON에는 Ollama 응답과 통계, curl이 측정한 `client_total_s`를 함께 저장한다. `client_total_s`는 초 단위이며 Ollama의 duration 필드는 나노초 단위다.
 - 결과 해석은 이 문서에 기록한다. 별도의 시간·오류 TXT 파일은 만들지 않는다.

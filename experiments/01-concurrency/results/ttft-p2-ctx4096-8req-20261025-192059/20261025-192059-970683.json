@@ -1,0 +1,27 @@
+{
+  "started_at": "2026-10-25T19:20:59.970683+09:00",
+  "model": "llama3.1:8b",
+  "prompt": "[req 4-20261025-192059] Count from 1 to 2000, separated by commas. Do not stop early.",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 64
+  },
+  "cache_state": "warm",
+  "ttft_s": 0.23355908296070993,
+  "tpot_s": 0.02482658399948998,
+  "total_s": 1.7976338749285787,
+  "response": "Here is the count from 1 to 2000, separated by commas:\n\n1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, ",
+  "server_stats": {
+    "model": "llama3.1:8b",
+    "created_at": "2026-10-25T10:21:01.767795Z",
+    "done": true,
+    "done_reason": "length",
+    "total_duration": 1784263583,
+    "load_duration": 1543750,
+    "prompt_eval_count": 40,
+    "prompt_eval_duration": 110961000,
+    "eval_count": 64,
+    "eval_duration": 1563593000
+  }
+}

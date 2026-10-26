@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser(description="Ollama 요청 하나의 TTFT와 TP
 parser.add_argument("prompt", help="보낼 질문")
 parser.add_argument("--model", default="llama3.1:8b")
 parser.add_argument("--num-predict", type=int, default=64, help="최대 출력 토큰 수")
+parser.add_argument("--out-dir", default="experiments/03-ttft/results", help="결과 저장 디렉터리")
 args = parser.parse_args()
 
 payload = {
@@ -59,7 +60,7 @@ result = {
     "server_stats": {k: v for k, v in final.items() if k not in ("response", "context")},
 }
 
-out_dir = Path("experiments/03-ttft/results")
+out_dir = Path(args.out_dir)
 out_dir.mkdir(parents=True, exist_ok=True)
 out_path = out_dir / f"{started_at:%Y%m%d-%H%M%S-%f}.json"
 out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
