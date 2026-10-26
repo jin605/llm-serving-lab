@@ -1,0 +1,27 @@
+{
+  "started_at": "2026-10-26T23:27:13.170106+09:00",
+  "model": "llama3.1:8b",
+  "prompt": "[doc 1793024832252235000] The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.  Question: What animal is lazy?",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 16
+  },
+  "cache_state": "warm",
+  "ttft_s": 0.11126958299428225,
+  "tpot_s": 0.01856767271445798,
+  "total_s": 0.2412432919954881,
+  "response": "The answer is: The dog.",
+  "server_stats": {
+    "model": "llama3.1:8b",
+    "created_at": "2026-10-26T14:27:13.410755Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 232012125,
+    "load_duration": 588500,
+    "prompt_eval_count": 529,
+    "prompt_eval_duration": 100839000,
+    "eval_count": 8,
+    "eval_duration": 129466000
+  }
+}

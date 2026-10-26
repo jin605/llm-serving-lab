@@ -1,0 +1,27 @@
+{
+  "started_at": "2026-10-26T23:27:13.490192+09:00",
+  "model": "llama3.1:8b",
+  "prompt": "[doc 1793024833433045000] The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.  Question: How many times does the word fox appear?",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 16
+  },
+  "cache_state": "warm",
+  "ttft_s": 0.5497367080533877,
+  "tpot_s": 0.018639726215042174,
+  "total_s": 0.8106928750639781,
+  "response": "The word \"fox\" appears 40 times in the given text.",
+  "server_stats": {
+    "model": "llama3.1:8b",
+    "created_at": "2026-10-26T14:27:14.300286Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 801229750,
+    "load_duration": 584000,
+    "prompt_eval_count": 533,
+    "prompt_eval_duration": 533543000,
+    "eval_count": 15,
+    "eval_duration": 260483000
+  }
+}

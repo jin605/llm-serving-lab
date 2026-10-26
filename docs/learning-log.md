@@ -66,3 +66,13 @@
 - 관찰: 생성 중인 요청에 다른 요청의 입력 처리가 끼어들면 그 요청의 TPOT이 늘었다. chunked prefill이 해결하려는 문제다.
 - 다음 행동: Mac에서 Prefix Cache 실험을 하고, GPU 서버에서 vLLM으로 같은 측정을 반복한다.
 - 관련 실험: [Prefix Cache](../experiments/02-prefix-cache/report.md), [TTFT](../experiments/03-ttft/report.md)
+
+## 2026-10-26 — Prefix cache 재사용 효과
+
+- 실행: 같은 문서(약 0~2000 tokens)에 질문만 바꾼 요청 두 개를 연달아 보냈다. RAG 검색은 구현하지 않고 서버가 받는 입력 모양만 흉내 냈다.
+- 관찰: 첫 요청의 TTFT는 문서 길이에 비례했고(2000 tokens에서 약 2초), 두 번째 요청은 길이와 상관없이 약 110 ms였다.
+- 이해: 서버는 앞부분이 같은 만큼 KV cache를 재사용하고 뒤의 다른 부분만 계산한다. RAG에서 같은 문서로 여러 번 질문하면 두 번째부터 TTFT 목표를 지킬 수 있다.
+- 이해: `prompt_eval_count`는 재사용한 토큰까지 포함한 전체 길이로 나온다. 재사용 여부는 `prompt_eval_duration`이나 TTFT로 판단한다.
+- 이해: LLM 서버는 RAG 검색을 모른다. 서빙 성능은 문서를 어떻게 찾았는지가 아니라 입력의 길이와 앞부분이 얼마나 같은지로 정해진다.
+- 다음 행동: 앞부분 변경, 다른 요청 끼어들기, 문서 순서 변경으로 cache가 깨지는 조건을 확인한다.
+- 관련 실험: [Prefix Cache](../experiments/02-prefix-cache/report.md)

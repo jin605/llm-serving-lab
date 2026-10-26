@@ -1,0 +1,27 @@
+{
+  "started_at": "2026-10-26T23:27:09.380573+09:00",
+  "model": "llama3.1:8b",
+  "prompt": "[doc 1793024829328784000]  Question: How many times does the word fox appear?",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 16
+  },
+  "cache_state": "warm",
+  "ttft_s": 0.11221258307341486,
+  "tpot_s": 0.0182112055287386,
+  "total_s": 0.38538066600449383,
+  "response": "I don’t have access to a search engine to provide information about the word fox",
+  "server_stats": {
+    "model": "llama3.1:8b",
+    "created_at": "2026-10-26T14:27:09.765549Z",
+    "done": true,
+    "done_reason": "length",
+    "total_duration": 375378375,
+    "load_duration": 713542,
+    "prompt_eval_count": 33,
+    "prompt_eval_duration": 100401000,
+    "eval_count": 16,
+    "eval_duration": 272886000
+  }
+}

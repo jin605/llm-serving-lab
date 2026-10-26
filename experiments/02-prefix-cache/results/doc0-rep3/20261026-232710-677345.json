@@ -1,0 +1,27 @@
+{
+  "started_at": "2026-10-26T23:27:10.677345+09:00",
+  "model": "llama3.1:8b",
+  "prompt": "[doc 1793024830180081000]  Question: What animal is lazy?",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 16
+  },
+  "cache_state": "warm",
+  "ttft_s": 0.1104079169454053,
+  "tpot_s": 0.018329616667081914,
+  "total_s": 0.385352166951634,
+  "response": "The sloth is often considered to be one of the laziest animals.",
+  "server_stats": {
+    "model": "llama3.1:8b",
+    "created_at": "2026-10-26T14:27:11.062271Z",
+    "done": true,
+    "done_reason": "length",
+    "total_duration": 376377000,
+    "load_duration": 559416,
+    "prompt_eval_count": 29,
+    "prompt_eval_duration": 99843000,
+    "eval_count": 16,
+    "eval_duration": 274583000
+  }
+}

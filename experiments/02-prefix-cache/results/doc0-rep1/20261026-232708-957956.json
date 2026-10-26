@@ -1,0 +1,27 @@
+{
+  "started_at": "2026-10-26T23:27:08.957956+09:00",
+  "model": "llama3.1:8b",
+  "prompt": "[doc 1793024828456833000]  Question: What animal is lazy?",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 16
+  },
+  "cache_state": "warm",
+  "ttft_s": 0.11168075003661215,
+  "tpot_s": 0.018401964773567252,
+  "total_s": 0.3509062920929864,
+  "response": "The sloth is often considered the epitome of laziness.",
+  "server_stats": {
+    "model": "llama3.1:8b",
+    "created_at": "2026-10-26T14:27:09.308337Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 342130333,
+    "load_duration": 617958,
+    "prompt_eval_count": 29,
+    "prompt_eval_duration": 101665000,
+    "eval_count": 14,
+    "eval_duration": 238841000
+  }
+}
