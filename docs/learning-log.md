@@ -76,3 +76,13 @@
 - 이해: LLM 서버는 RAG 검색을 모른다. 서빙 성능은 문서를 어떻게 찾았는지가 아니라 입력의 길이와 앞부분이 얼마나 같은지로 정해진다.
 - 다음 행동: 앞부분 변경, 다른 요청 끼어들기, 문서 순서 변경으로 cache가 깨지는 조건을 확인한다.
 - 관련 실험: [Prefix Cache](../experiments/02-prefix-cache/report.md)
+
+## 2026-10-28 — Prefix cache가 깨지는 조건
+
+- 관찰: 1000 tokens 문서에서 한 문장만 바꿔도 그 지점 뒤는 다시 계산했다. TTFT ≈ 115 ms + (바뀐 지점 뒤 토큰 수) × 0.84 ms로 예측과 맞았다.
+- 관찰: 맨 앞 단어 하나만 달라도 재사용이 전혀 되지 않았다(954 ms). 맨 끝이 바뀌면 손해가 거의 없었다.
+- 이해: 고정된 내용은 앞에, 현재 시각·사용자 정보·질문처럼 바뀌는 내용은 뒤에 둔다. vLLM, SGLang, 상용 API의 prompt caching에도 같은 원리가 적용된다.
+- 관찰: 다른 문서 요청이 7개 끼어들어도 재사용됐다(+25~40 ms). llama.cpp가 밀려난 cache를 RAM에 보관했다가 가져온 것으로 본다.
+- 이해: RAM 보관은 llama.cpp 고유 동작이라 수치는 vLLM에 옮길 수 없다. 개념은 KV cache offloading, cache-aware routing으로 실무와 이어진다.
+- 다음 행동: GPU 서버에서 vLLM으로 같은 측정을 반복한다.
+- 관련 실험: [Prefix Cache](../experiments/02-prefix-cache/report.md)

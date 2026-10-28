@@ -36,7 +36,9 @@ SGLang, Quantization, GPU Profiling, Kubernetes는 필요한 실험이 생길 �
 - 긴 연속 실행에서 GPU 클럭이 1620 → 약 1360 MHz로 내려가며 TPOT이 약 5~7% 늘어나는 것을 `powermetrics`로 관찰했다.
 - 동시 사용자 8명에서 parallel 1/2/4/8별 TTFT·TPOT을 측정했다. TTFT 1초·TPOT 50 ms 목표를 지키며 처리할 수 있는 사용자는 약 4명이었다: [Concurrency 실험 3](experiments/01-concurrency/report.md).
 - 같은 문서에 질문만 바꿔 보내자 두 번째 요청의 TTFT가 문서 길이와 상관없이 약 110 ms였다. 2000 tokens 문서에서 약 2초 → 0.12초: [Prefix Cache 실험 1](experiments/02-prefix-cache/report.md).
-- 다음 작업: prefix cache가 깨지는 조건(앞부분 변경, 다른 요청 끼어들기, 문서 순서 변경)을 확인한다. 이후 GPU 서버에서 vLLM으로 같은 측정을 반복한다(6단계).
+- 문서 한 문장만 바꿔도 그 지점부터 뒤는 다시 계산했다. 맨 앞이 바뀌면 재사용이 전혀 되지 않았다. 고정된 내용은 앞에, 바뀌는 내용은 뒤에 둔다.
+- 다른 요청이 7개 끼어들어도 llama.cpp가 RAM에 보관한 cache로 재사용했다(+25~40 ms). 이 동작은 llama.cpp 고유다.
+- Mac + Ollama에서 할 실험을 마쳤다. 다음 작업: GPU 서버에서 vLLM으로 같은 측정을 반복한다(6단계).
 ## 디렉터리 역할
 
 | 경로 | 역할 |
