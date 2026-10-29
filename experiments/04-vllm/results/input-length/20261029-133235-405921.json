@@ -1,0 +1,26 @@
+{
+  "started_at": "2026-10-29T13:32:35.405921+00:00",
+  "api": "openai",
+  "url": "http://localhost:8000/v1/chat/completions",
+  "model": "meta-llama/Llama-3.1-8B-Instruct",
+  "prompt": "[run 10-1793280755348101926] The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. Summarize the text above.",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 64
+  },
+  "cache_state": "unknown",
+  "ttft_s": 0.04733208566904068,
+  "tpot_s": 0.017500564090761485,
+  "total_s": 0.9581950688734651,
+  "output_tokens": 52,
+  "finish_reason": "stop",
+  "response": "The text is a repetition of the well-known pangram \"The quick brown fox jumps over the lazy dog.\" It is a sentence that contains all 26 letters of the alphabet at least once, making it a commonly used example in typing and keyboard demonstrations.",
+  "server_stats": {
+    "usage": {
+      "prompt_tokens": 155,
+      "total_tokens": 207,
+      "completion_tokens": 52
+    }
+  }
+}

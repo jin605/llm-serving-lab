@@ -1,0 +1,26 @@
+{
+  "started_at": "2026-10-29T13:37:19.259836+00:00",
+  "api": "openai",
+  "url": "http://localhost:8000/v1/chat/completions",
+  "model": "meta-llama/Llama-3.1-8B-Instruct",
+  "prompt": "[req 8-20261029-133719] Count from 1 to 2000, separated by commas. Do not stop early.",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 64
+  },
+  "cache_state": "unknown",
+  "ttft_s": 0.1883120583370328,
+  "tpot_s": 0.019143182562575453,
+  "total_s": 1.394509700126946,
+  "output_tokens": 64,
+  "finish_reason": "length",
+  "response": "Here's the count from 1 to 2000, separated by commas:\n\n1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, ",
+  "server_stats": {
+    "usage": {
+      "prompt_tokens": 65,
+      "total_tokens": 129,
+      "completion_tokens": 64
+    }
+  }
+}
