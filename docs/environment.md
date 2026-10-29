@@ -24,15 +24,23 @@
 
 ## GPU 서버
 
-- 제공 업체 / 인스턴스: 미선정
-- GPU 종류 / 개수 / VRAM:
-- OS / 드라이버 / CUDA:
-- 컨테이너 이미지 / digest:
-- 런타임 버전 / 소스 commit:
-- 모델 ID / revision / tokenizer revision:
-- dtype / 양자화 / 최대 context 길이:
-- 서버 실행 명령:
-- 대여 비용 / 실행 시간:
+### 2026-10-29 RunPod (04-vllm)
+
+- 제공 업체 / 인스턴스: RunPod Pod, Secure Cloud, US-WA-1
+- GPU 종류 / 개수 / VRAM: NVIDIA RTX 6000 Ada Generation × 1, 49,140 MiB
+- GPU 사양 (nvidia-smi): 최대 SM 클럭 3,105 MHz, 최대 메모리 클럭 10,001 MHz, 전력 한도 300 W. 부하 중 메모리 클럭은 9,501 MHz였다.
+- 메모리 대역폭: 사양 약 960 GB/s (384-bit). 부하 중 메모리 클럭 기준 약 912 GB/s.
+- CPU / RAM: AMD EPYC 75F3 16 vCPU / 62 GB
+- OS / 드라이버 / CUDA: Ubuntu 24.04 / 595.91.07 / 13.2
+- 컨테이너 이미지: `runpod/pytorch:1.5.0-cu1281-torch280-ubuntu2404`, Container disk 50 GB, 볼륨 없음
+- Python: 3.12.3, `uv venv`로 만든 가상환경 (시스템 pip는 Debian 패키지 충돌로 설치 실패)
+- 런타임 버전: vLLM 0.32.0, PyTorch 2.13.0 (vLLM 설치 시 함께 설치)
+- 모델 ID: `meta-llama/Llama-3.1-8B-Instruct` (Hugging Face gated, revision 미기록)
+- dtype / 양자화 / 최대 context 길이: bf16(기본값), 양자화 없음, `--max-model-len 4096`
+- 서버 실행 명령: `vllm serve meta-llama/Llama-3.1-8B-Instruct --max-model-len 4096 --gpu-memory-utilization 0.90 --port 8000` (동시 처리 수 실험에서는 `--max-num-seqs N` 추가)
+- 메모리 배분 (서버 로그): 모델 15.0 GiB, 활성값 최대 1.43 GiB, CUDA graph 0.24 GiB, KV cache 25.95 GiB = 212,576 tokens (토큰당 128 KiB)
+- 대여 비용 / 실행 시간: $1.00/hr (GPU $0.99 + 디스크 $0.007), 약 48분, 약 $0.80
+- 측정 위치: 측정 스크립트를 같은 Pod 안에서 실행했다 (`localhost:8000`). 네트워크 지연이 섞이지 않는다.
 
 ## 측정 조건
 

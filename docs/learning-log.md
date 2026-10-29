@@ -86,3 +86,16 @@
 - 이해: RAM 보관은 llama.cpp 고유 동작이라 수치는 vLLM에 옮길 수 없다. 개념은 KV cache offloading, cache-aware routing으로 실무와 이어진다.
 - 다음 행동: GPU 서버에서 vLLM으로 같은 측정을 반복한다.
 - 관련 실험: [Prefix Cache](../experiments/02-prefix-cache/report.md)
+
+## 2026-10-29 — GPU 서버 + vLLM 첫 측정
+
+- 실행: RunPod RTX 6000 Ada 1장에 vLLM 0.32.0을 올리고, Mac에서 만든 측정 도구로 같은 실험을 반복했다. 측정은 Pod 안에서 했다.
+- 준비: Llama 3.1은 Hugging Face gated 모델이라 라이선스 승인과 Read-Only 토큰이 필요했다. Ubuntu 24.04 시스템 pip는 Debian 패키지 충돌로 실패해 `uv venv`로 설치했다.
+- 관찰: TPOT 17.9 ms로 메모리 대역폭 예측(18.6 ms)과 맞았다. bf16 모델이 Q4보다 약 3배 크고 GPU 대역폭도 약 3배라 Mac과 같았다. prefill은 약 7배 빨랐다.
+- 관찰: KV cache 212,576 tokens = 25.95 GiB, 토큰당 정확히 128 KiB로 계산과 같았다.
+- 관찰: 동시 사용자 128명까지 목표를 지켰고 256명에서 무너졌다. 사용자 한 명을 더할 때 한 단계가 약 0.07 ms만 늘었다(Mac 약 5~7 ms).
+- 이해: 메모리 병목이 끝나는 지점은 "연산 성능 ÷ 메모리 대역폭"으로 예측한다(이 GPU 약 130명). 그 아래에서는 묶어도 거의 공짜라 동시 처리 수를 제한할 이유가 없다. Mac의 trade-off 결론은 환경에 따라 달라진다.
+- 이해: nvidia-smi의 GPU-Util 100%도 연산 사용률이 아니다. 혼자 쓰면 GPU는 300 W로 Mac(28 W)과 같은 속도를 내므로, 많이 묶어야 비용 효율이 난다.
+- 막힌 점: 동시에 띄운 프로세스의 결과 파일 이름이 겹쳐 덮어써졌다. 파일 이름에 프로세스 번호를 붙였다. `.log`는 `.gitignore` 대상이라 `git add -f`로 넣었다.
+- 다음 행동: 3개월차 주제(양자화, 요청 도착률 기반 부하, chunked prefill)를 정한다.
+- 관련 실험: [vLLM](../experiments/04-vllm/report.md)

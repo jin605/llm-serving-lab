@@ -15,7 +15,7 @@ Ollama와 vLLM에 요청을 보내고, 입력 길이·출력 길이·동시 요�
 - [x] 3. 스트리밍 측정: 요청 시작부터 첫 출력 도착까지 TTFT를 측정한다.
 - [x] 4. 길이별 반복 실험: 입력·출력 길이 조건과 실제 토큰 수를 기록하고 비교한다.
 - [x] 5. 동시 요청과 분석: 동시 요청 수에 따른 지연과 처리량을 비교한다.
-- [ ] 6. vLLM 연결: NVIDIA GPU 서버에서 같은 측정 도구로 실험한다.
+- [x] 6. vLLM 연결: NVIDIA GPU 서버에서 같은 측정 도구로 실험한다.
 - [ ] 7. Prefix Cache: 공통 Prefix 재사용 조건과 성능 변화를 검증한다.
 
 SGLang, Quantization, GPU Profiling, Kubernetes는 필요한 실험이 생길 때 확장한다.
@@ -38,7 +38,10 @@ SGLang, Quantization, GPU Profiling, Kubernetes는 필요한 실험이 생길 �
 - 같은 문서에 질문만 바꿔 보내자 두 번째 요청의 TTFT가 문서 길이와 상관없이 약 110 ms였다. 2000 tokens 문서에서 약 2초 → 0.12초: [Prefix Cache 실험 1](experiments/02-prefix-cache/report.md).
 - 문서 한 문장만 바꿔도 그 지점부터 뒤는 다시 계산했다. 맨 앞이 바뀌면 재사용이 전혀 되지 않았다. 고정된 내용은 앞에, 바뀌는 내용은 뒤에 둔다.
 - 다른 요청이 7개 끼어들어도 llama.cpp가 RAM에 보관한 cache로 재사용했다(+25~40 ms). 이 동작은 llama.cpp 고유다.
-- Mac + Ollama에서 할 실험을 마쳤다. 다음 작업: GPU 서버에서 vLLM으로 같은 측정을 반복한다(6단계).
+- Mac + Ollama에서 할 실험을 마쳤다.
+- RunPod RTX 6000 Ada + vLLM에서 같은 측정을 반복했다(약 48분, 약 $0.80): [vLLM 결과](experiments/04-vllm/report.md).
+- 결과: TPOT은 메모리 대역폭 모델 예측(18.6 ms)대로 17.9 ms로 Mac과 같았고, prefill은 약 7배 빨랐다. 동시 128명까지 TTFT 1초·TPOT 50 ms 목표를 지켰다(Mac 약 4명). prefix cache 원리와 설계 규칙은 같았다.
+- 다음 작업: 결과를 바탕으로 3개월차 주제(양자화, 요청 도착률 기반 부하, chunked prefill)를 정한다.
 ## 디렉터리 역할
 
 | 경로 | 역할 |
@@ -69,3 +72,4 @@ SGLang, Quantization, GPU Profiling, Kubernetes는 필요한 실험이 생길 �
 - [Concurrency](experiments/01-concurrency/report.md)
 - [Prefix Cache](experiments/02-prefix-cache/report.md)
 - [TTFT](experiments/03-ttft/report.md)
+- [vLLM](experiments/04-vllm/report.md)

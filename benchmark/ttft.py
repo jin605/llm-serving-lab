@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import time
 import urllib.request
 from datetime import datetime
@@ -131,7 +132,8 @@ result = {
 
 out_dir = Path(args.out_dir)
 out_dir.mkdir(parents=True, exist_ok=True)
-out_path = out_dir / f"{started_at:%Y%m%d-%H%M%S-%f}.json"
+# 동시에 띄운 프로세스끼리 시각이 같아도 겹치지 않게 프로세스 번호를 붙인다
+out_path = out_dir / f"{started_at:%Y%m%d-%H%M%S-%f}-{os.getpid()}.json"
 out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
 
 load_text = f", load {load_s * 1000:.0f} ms" if load_s is not None else ""
